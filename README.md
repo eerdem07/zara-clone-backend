@@ -19,7 +19,7 @@ Bu projeyi yerel geliştirme ortamınızda çalıştırmadan önce aşağıdaki 
 1. Projeyi yerel makinenize klonlayın:
 
 ```bash
-git clone https://github.com/<kullaniciAdi>/zara-backend-api-clone.git
+git clone https://github.com/eerdem07/zara-backend-api-clone.git
 cd zara-backend-api-clone
 ```
 

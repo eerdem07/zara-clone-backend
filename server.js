@@ -1,9 +1,9 @@
 const app = require("./app");
-const dotenv = require("dotenv");
-const mongoose = require("./mongoose");
+const dotenv = require("dotenv").config();
+const mongoose = require("mongoose");
 
 mongoose
-  .connect(dotenv.DATABASE)
+  .connect(process.env.DATABASE)
   .then(() => {
     console.log("SUCCESSFULLY CONNTECT TO DATABASE!");
   })
@@ -11,6 +11,6 @@ mongoose
     console.error(err);
   });
 
-app.listen(dotenv.PORT, () => {
-  console.log(`Server is active on ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is active on ${process.env.PORT}`);
 });
