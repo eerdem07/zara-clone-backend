@@ -2,13 +2,15 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
-const productRouter = require("./routes/productRouter");
+const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 app.use(express.json());
 app.use(morgan("dev"));
 
 // ROUTES
-app.use("/api/v1/product", productRouter);
+app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/", userRoutes);
 
 app.get("/", (req, res, next) => {
   res.status(200).json({
