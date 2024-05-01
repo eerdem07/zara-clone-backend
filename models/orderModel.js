@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    orderNumber:{type:Number},
+    orderNumber:{type:Number,required:true},
     products:[{type:Schema.types.ObjectId, ref:'Product'}],
     purchaseDate:{type:Date},
     deliveryDate:{type:Date},
@@ -12,6 +12,13 @@ const orderSchema = new mongoose.Schema({
 const Order = mongoose.Model('Order',orderSchmea);
 
 module.exports = Order;
+
+// SchemaTypes: required, default, select, validate, get, set, alias, immutabe, transform
+// indexes: index, unique, sprase
+// String: lowercase, uppercase, trim, match, enum, minLength, maxLength, populate
+// Number: min, max, enum, populate
+// Date: min, max, expires
+// ObjectId: populate
 
 //ürünün kodu eklenecek.
 
