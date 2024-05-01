@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true, min: 1 },
-    code: { type: String, required: true },
+    productNumber: { type: String, required: true },
     description: { type: String, required: false },
     color: { type: String, required: false },
     material: [
@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema(
         stock: { type: Number, required: true },
       },
     ],
-    images: { type: String },
+    images: [{ type: String }],
   },
   { timestamps: true }
 );

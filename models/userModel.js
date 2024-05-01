@@ -13,12 +13,27 @@ const userSchema = new mongoose.Schema({
   },
   password: { type: String, minLength: 8 },
   phoneNumber: { type: String, required: true, unique: true, min: 7, max: 10 },
+  addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
   favItems: [
     {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
     },
   ],
+  OTP: {
+    code: { type: String },
+    expiresAt: { type: Date },
+  },
 });
+
+userSchema.methods.isExpired = function () {
+  if (this.OTP.expiresAt < new Date()) {
+    this.OTP.code = "";
+    return false;
+  } else {
+    return true;
+  }
+};
 
 const User = mongoose.model("User", userSchema);
 

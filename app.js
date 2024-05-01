@@ -2,27 +2,22 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
-const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 app.use(express.json());
 app.use(morgan("dev"));
 
 // ROUTES
-app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/", userRoutes);
-
-app.get("/", (req, res, next) => {
-  res.status(200).json({
-    status: "success",
-    message: "/",
-  });
-});
+app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/category", categoryRoutes);
 
 app.all("*", (req, res) => {
   res.status(404).json({
     message: "error",
-    error: "the path youre trying to access doesnt exist.",
+    error: "the path you're trying to access doesnt exist.",
   });
 });
 
