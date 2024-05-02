@@ -6,6 +6,8 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 
+const errorController = require('../controllers/errorController');
+
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -20,5 +22,7 @@ app.all("*", (req, res) => {
     error: "the path you're trying to access doesnt exist.",
   });
 });
+
+app.use(errorController);
 
 module.exports = app;
