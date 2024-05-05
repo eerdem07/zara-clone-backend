@@ -6,7 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 
-const errorController = require('../controllers/errorController');
+const errorController = require("./controllers/errorController");
 
 app.use(express.json());
 app.use(morgan("dev"));

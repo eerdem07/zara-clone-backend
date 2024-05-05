@@ -1,11 +1,12 @@
 const User = require("../models/userModel");
 const jsonwebtoken = require("jsonwebtoken");
 
-const createOTP = require("../utils/otp");
 const sendMail = require("../utils/mail");
 
 const bcrypt = require("bcrypt");
 const saltrounds = 15;
+
+const AppError = require("../utils/AppError");
 
 const createJWT = (payload) => {
   return jsonwebtoken.sign({ _id: payload }, process.env.SECRET_KEY, {
@@ -19,11 +20,9 @@ exports.login = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select("password");
 
-    if (!user)
-      res.status(401).json({
-        status: "fail",
-        message: "the user with this given email cant found!",
-      });
+    if (!user) {
+      throw new AppError("The user with this given email cant found!", 400);
+    }
 
     const valid = await bcrypt.compare(password, user.password);
 
@@ -58,10 +57,7 @@ exports.signUp = async (req, res, next) => {
     const userExists = await User.findOne({ email: email });
 
     if (userExists) {
-      res.status(409).json({
-        status: "fail",
-        message: "user already exists",
-      });
+      throw new AppError("User already exists", 409);
     }
 
     const hashedPassword = await bcrypt.hash(password, saltrounds);
@@ -96,26 +92,19 @@ exports.changePassword = async (req, res, next) => {
     const { email, password, newPassword } = req.body;
 
     if (!email || !password || !newPassword)
-      req.status(400).json({
-        status: "fail",
-        message: "no parameters sent",
-      });
+      throw new AppError("no parameters sent", 400);
 
     const user = await User.findOne({ email }).select("password");
 
     if (!user)
-      res.status(400).json({
-        status: "fail",
-        message: "the user with this given email cant not be found!",
-      });
+      throw new AppError(
+        "the user with this given email cant not be found!",
+        400
+      );
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch)
-      res.status(400).json({
-        status: "fail",
-        message: "wrong password!",
-      });
+    if (!isMatch) throw new AppError("wrong password!", 400);
 
     user.password = await bcrypt.hash(newPassword, saltrounds);
 
@@ -134,27 +123,13 @@ exports.forgotPassword = async (req, res, next) => {
   try {
     const email = req.body.email;
 
-    if (!email)
-      res.status(400).json({
-        status: "fail",
-        message: "no mail sent",
-      });
+    if (!email) throw new AppError("no mail sent", 400);
 
     const user = await User.findOne({ email });
 
-    if (!user)
-      res.status(400).json({
-        status: "fail",
-        message: "user can not be found",
-      });
+    if (!user) throw new AppError("user can not be found", 400);
 
-    const otp = createOTP();
-
-    user.OTP.code = otp;
-    user.OTP.expiresAt = new Date();
-    await user.save();
-
-    sendMail(email, "resetPassword", otp, `<h1>Here is your ${otp} code</h1>`);
+    // sendMail(email, "resetPassword", otp, `<h1>Here is your ${otp} code</h1>`);
 
     res.status(200).json({
       status: "success",
