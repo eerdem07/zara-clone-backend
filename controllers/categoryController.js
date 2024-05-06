@@ -1,110 +1,92 @@
-const Category = require('../models/categoryModel')
+const Category = require("../models/categoryModel");
+
+const AppError = require("../utils/AppError");
 
 exports.addCategory = async (req, res, next) => {
-    try{
-        const {categoryName} = req.body;
+  try {
+    const { categoryName } = req.body;
 
-        const category = User.find({categoryName});
+    const category = User.find({ categoryName });
 
-        if(category){
-            res.status(400).json({
-                status:'fail',
-                message:'theres category given this name'
-            })
-        }
-
-        const newCategory = new Category(categoryName)
-        await newCategory.save();
-
-        res.status(200).json({
-            status:"success",
-            message:'category created'
-        })
-    }catch(err){
-        next(err)
+    if (category) {
+      throw new AppError("theres category given this name", 400);
     }
+
+    const newCategory = new Category(categoryName);
+    await newCategory.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "category created",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.deleteCategory = async (req, res, next) => {
-    try{
-        const {categoryName} = req.body;
+  try {
+    const { categoryName } = req.body;
 
-        const category = await Category.findOne({categoryName});
+    const category = await Category.findOne({ categoryName });
 
-        if(!category){
-            res.status(400).json({
-                status:'fail',
-                message:'theres category given this name'
-            })
-        }
+    if (!category) throw new AppError("theres category given this name", 400);
 
-        await category.remove();
+    await category.remove();
 
-        res.status(200).json({
-            status:'success',
-            message:'category deleted'
-        })
-
-    }catch(err){
-        next(err);
-    }
+    res.status(200).json({
+      status: "success",
+      message: "category deleted",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.changeCategoryName = async (req, res, next) => {
-    try{
-        const {categoryName} = req.body;
+  try {
+    const { categoryName } = req.body;
 
-        const category = await Category.findOne({categoryName});
+    const category = await Category.findOne({ categoryName });
 
-        if(!category){
-            res.status(400).json({
-                status:'fail',
-                message:'theres category given this name'
-            })
-        }
+    if (!category) throw new AppError("theres category given this name", 400);
 
-        category.categoryName = categoryName;
+    category.categoryName = categoryName;
 
-        await category.save();
+    await category.save();
 
-        res.status(200).json({
-            status:'sucess',
-            message:'category updated'
-        })
-    }catch(err){}
+    res.status(200).json({
+      status: "sucess",
+      message: "category updated",
+    });
+  } catch (err) {}
 };
 
 exports.addProductToCategory = async (req, res, next) => {
-    try{
-        const {productId, categoryName} = req.body;
+  try {
+    const { productId, categoryName } = req.body;
 
-        if(!productId || !categoryName){
-            res.status(400).json({
-                status:'fail',
-                message:'please fullfil productId or categoryName'
-            })
-        }
+    if (!productId || !categoryName)
+      throw new AppError("please fullfil productId or categoryName", 400);
 
-        const category = await Category.findone({categoryName});
+    const category = await Category.findone({ categoryName });
 
-        if(!category){
-            res.status(400).json({
-                status:'fail',
-                message:'category cannot be found!'
-            })
-        }
+    if (!category) throw new AppError("category cannot be found!", 400);
 
-        category.productId.push(productId);
+    category.productId.push(productId);
 
-        await category.save();
+    await category.save();
 
-        res.status(200).json({
-            status:'success',
-            message:'product added to this category'
-        })
-    }catch(err){
-        next(err);
-    }
+    res.status(200).json({
+      status: "success",
+      message: "product added to this category",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.deleteProductFromCategory = async (req, res, next) => {};
+exports.deleteProductFromCategory = async (req, res, next) => {
+  try {
+  } catch (err) {}
+};
