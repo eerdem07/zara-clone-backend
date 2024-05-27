@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true, min: 1 },
-    productId: { type: String, required: true },
+    productId: { type: String, required: true, unique: true },
     description: { type: String, required: false },
     color: { type: String, required: false },
     material: [
@@ -30,6 +30,32 @@ productSchema.virtual("discountedPrice").get(() => {
   if (this.discount && this.discount > 0 && this.discount < 100) {
     return this.discount * (100 - discount);
   }
+});
+
+const generateId = () => {
+  return `${Math.floor(Math.random() * 10000)}/${Math.floor(
+    Math.random() * 1000
+  )}`;
+};
+
+productSchema.pre("save", async function (next) {
+  if (!this.productId) {
+    let isUnique = false;
+    let newProductId = "";
+
+    while (!isUnique) {
+      newProductId = generateId();
+      const existingProduct = await Product.findOne({
+        productId: newProductId,
+      });
+      if (!existingProduct) {
+        this.productId = newProductId;
+        isUnique = true;
+      }
+    }
+  }
+
+  next();
 });
 
 const Product = mongoose.model("Product", productSchema);

@@ -20,9 +20,7 @@ exports.login = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select("password");
 
-    if (!user) {
-      throw new AppError("The user with this given email cant found!", 400);
-    }
+    if (!user) throw new AppError("please fullfil email or password", 400);
 
     const valid = await bcrypt.compare(password, user.password);
 
@@ -43,7 +41,7 @@ exports.login = async (req, res, next) => {
     } else {
       res
         .status(400)
-        .json({ status: "fail", message: "email and password wrong" });
+        .json({ status: "fail", message: "email or password wrong" });
     }
   } catch (err) {
     next(err);

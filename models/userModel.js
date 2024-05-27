@@ -12,7 +12,13 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
   password: { type: String, minLength: 8 },
-  phoneNumber: { type: String, required: true, unique: true, min: 7, max: 10 },
+  phoneNumber: {
+    type: String,
+    required: true,
+    unique: [true, "Phone number must be unique"],
+    min: 7,
+    max: 10,
+  },
   addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
   favItems: [
     {

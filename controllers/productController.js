@@ -1,7 +1,102 @@
 const Product = require("../models/productModel");
+const AppError = require("../utils/AppError");
 
-exports.addProduct = (req, res, next) => {};
+exports.getAllProduct = async (req, res, next) => {
+  try {
+    const products = await Product.find();
 
-exports.deleteProduct = (req, res, next) => {};
+    res.status(200).json({
+      status: "success",
+      message: `${products.length} product found!`,
+      data: [products],
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
-exports.updateProduct = (req, res, next) => {};
+exports.getProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.body;
+
+    if (!productId) throw new AppError("Please provide the productId", 400);
+
+    const product = await Product.findOne({ productId });
+
+    if (!product)
+      throw new AppError("Product cant be found with this productId", 400);
+
+    res.status(200).json({
+      status: "success",
+      message: "Product founded",
+      data: product,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.addProduct = async (req, res, next) => {
+  try {
+    const {
+      name,
+      price,
+      description,
+      color,
+      material,
+      discount,
+      returnPolicy,
+      sizes,
+      images,
+    } = req.body;
+
+    if (!name || !price || !description) {
+      throw new AppError("Please provide name, price or description");
+    }
+
+    const newProduct = new Product({
+      name,
+      price,
+      description,
+      color,
+      material,
+      discount,
+      returnPolicy,
+      sizes,
+      images,
+    });
+
+    await newProduct.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "Product added",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.body;
+
+    if (!productId) throw new AppError("Please provide the productId", 400);
+
+    const product = await Product.findOne({ productId });
+
+    if (!product)
+      throw new AppError("Product cant be found with this productId", 400);
+
+    await product.deleteOne();
+
+    res.status(200).json({
+      status: "success",
+      message: "Product succesfully deleted",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProduct = async (req, res, next) => {};

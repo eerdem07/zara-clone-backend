@@ -9,6 +9,18 @@ const orderRoutes = require("./routes/orderRoutes");
 
 const errorController = require("./controllers/errorController");
 
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+
+app.use(
+  rateLimit({
+    windowMs: 15 * 10 * 1000,
+    limit: 200,
+  })
+);
+
+app.use(helmet());
+
 app.use(express.json());
 app.use(morgan("dev"));
 
