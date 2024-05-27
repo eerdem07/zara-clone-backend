@@ -17,11 +17,13 @@ const productSchema = new mongoose.Schema(
     variants: [
       {
         color: { type: String, required: true },
+        sizes: [
+          {
+            size: { type: String, required: true },
+            stock: { type: Number, required: true },
+          },
+        ],
         images: [{ type: String, required: true }],
-        sizes: {
-          size: { type: String, required: true },
-          stock: { type: Number, required: true },
-        },
       },
     ],
   },

@@ -42,12 +42,10 @@ exports.addProduct = async (req, res, next) => {
       name,
       price,
       description,
-      color,
       material,
       discount,
       returnPolicy,
-      sizes,
-      images,
+      variants,
     } = req.body;
 
     if (!name || !price || !description) {
@@ -58,19 +56,17 @@ exports.addProduct = async (req, res, next) => {
       name,
       price,
       description,
-      color,
       material,
       discount,
       returnPolicy,
-      sizes,
-      images,
+      variants,
     });
 
     await newProduct.save();
 
     res.status(201).json({
       status: "success",
-      message: "Product added",
+      message: `Prodcut:${name} is added`,
     });
   } catch (err) {
     next(err);
@@ -79,6 +75,8 @@ exports.addProduct = async (req, res, next) => {
 
 exports.deleteProduct = async (req, res, next) => {
   try {
+    // const productId = `${req.params.id[]}`
+
     const { productId } = req.body;
 
     if (!productId) throw new AppError("Please provide the productId", 400);
