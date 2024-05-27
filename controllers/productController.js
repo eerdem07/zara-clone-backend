@@ -51,7 +51,7 @@ exports.addProduct = async (req, res, next) => {
     } = req.body;
 
     if (!name || !price || !description) {
-      throw new AppError("Please provide name, price or description");
+      throw new AppError("Please provide name, price or description", 400);
     }
 
     const newProduct = new Product({

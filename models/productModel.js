@@ -4,9 +4,8 @@ const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true, min: 1 },
-    productId: { type: String, required: true, unique: true },
+    productId: { type: String, unique: true },
     description: { type: String, required: false },
-    color: { type: String, required: false },
     material: [
       {
         name: { type: String, required: true },
@@ -15,13 +14,16 @@ const productSchema = new mongoose.Schema(
     ],
     discount: { type: Number, required: false, min: 1, max: 99, default: 0 },
     returnPolicy: { type: Boolean, required: true, default: false },
-    sizes: [
+    variants: [
       {
-        size: { type: String, required: true },
-        stock: { type: Number, required: true },
+        color: { type: String, required: true },
+        images: [{ type: String, required: true }],
+        sizes: {
+          size: { type: String, required: true },
+          stock: { type: Number, required: true },
+        },
       },
     ],
-    images: [{ type: String }],
   },
   { timestamps: true }
 );
