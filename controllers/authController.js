@@ -8,8 +8,8 @@ const saltrounds = 15;
 
 const AppError = require("../utils/AppError");
 
-const createJWT = (payload) => {
-  return jsonwebtoken.sign({ _id: payload }, process.env.SECRET_KEY, {
+const createJWT = ({ id, role }) => {
+  return jsonwebtoken.sign({ _id: id, role: role }, process.env.SECRET_KEY, {
     expiresIn: "10m",
   });
 };
@@ -24,7 +24,7 @@ exports.login = async (req, res, next) => {
 
     const valid = await bcrypt.compare(password, user.password);
 
-    const token = createJWT(user._id.toString());
+    const token = createJWT(user._id.toString(), user.role);
 
     if (valid) {
       res
@@ -119,7 +119,7 @@ exports.changePassword = async (req, res, next) => {
 
 exports.forgotPassword = async (req, res, next) => {
   try {
-    const email = req.body.email;
+    const { email } = req.body;
 
     if (!email) throw new AppError("no mail sent", 400);
 
@@ -133,6 +133,28 @@ exports.forgotPassword = async (req, res, next) => {
       status: "success",
       message: "mail sended",
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { newPassword } = req.body;
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.authenticate = async (req, res, next) => {
+  try {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.SECRET_KEY,
+      function (err, decoded) {
+        throw new AppError(err, 400);
+      }
+    );
   } catch (err) {
     next(err);
   }

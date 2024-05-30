@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -18,6 +19,8 @@ app.use(
     limit: 200,
   })
 );
+
+app.use(cookieParser());
 
 app.use(helmet());
 

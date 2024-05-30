@@ -9,9 +9,16 @@ router
   .post(productController.addProduct)
   .patch(productController.updateProduct);
 
+// getAllProduct -> herkes
+// addProduct -> Manager, admin
+// updateProduct -> Manager, admin
+
 router
   .route("/:id")
   .get(productController.getProduct)
   .delete(productController.deleteProduct);
+
+// getProduct -> herkes
+// deleteProduct -> admin, deleteProduct
 
 module.exports = router;

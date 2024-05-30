@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema({
     maxLength: 254,
     trim: true,
   },
+  role: {
+    type: String,
+    enum: ["customer", "admin", "employee"],
+    default: "user",
+    lowercase: true,
+  },
   password: { type: String, minLength: 8 },
   phoneNumber: {
     type: String,

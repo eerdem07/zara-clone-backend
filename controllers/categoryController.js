@@ -3,12 +3,14 @@ const Product = require("../models/productModel");
 
 const AppError = require("../utils/AppError");
 
+// herkes
 exports.getCategoryWithProducts = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
   } catch (err) {}
 };
 
+// manager - admin
 exports.addCategory = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
@@ -31,6 +33,7 @@ exports.addCategory = async (req, res, next) => {
   }
 };
 
+// manager-admin
 exports.deleteCategory = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
@@ -50,6 +53,7 @@ exports.deleteCategory = async (req, res, next) => {
   }
 };
 
+// manager ve admin
 exports.changeCategoryName = async (req, res, next) => {
   try {
     const { categoryName, newCategoryName } = req.body;
@@ -72,6 +76,7 @@ exports.changeCategoryName = async (req, res, next) => {
   }
 };
 
+// manager ve admin
 exports.addProductToCategory = async (req, res, next) => {
   try {
     const { productId, categoryName } = req.body;
@@ -96,6 +101,7 @@ exports.addProductToCategory = async (req, res, next) => {
   }
 };
 
+// manager ve admin
 exports.deleteProductFromCategory = async (req, res, next) => {
   try {
     const { productId, categoryName } = req.body;
