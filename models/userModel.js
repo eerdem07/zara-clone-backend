@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["customer", "admin", "employee"],
-    default: "user",
+    default: "customer",
     lowercase: true,
   },
   password: { type: String, minLength: 8 },
@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
+  passwordResetToken: { type: String },
+  passwordResetTokenExpires: { type: Date },
   OTP: {
     code: { type: String },
     expiresAt: { type: Date },

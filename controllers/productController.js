@@ -1,7 +1,6 @@
 const Product = require("../models/productModel");
 const AppError = require("../utils/AppError");
 
-// herkes
 exports.getAllProduct = async (req, res, next) => {
   try {
     const products = await Product.find();
@@ -16,7 +15,6 @@ exports.getAllProduct = async (req, res, next) => {
   }
 };
 
-//herkes
 exports.getProduct = async (req, res, next) => {
   try {
     const { productId } = req.body;
@@ -38,7 +36,6 @@ exports.getProduct = async (req, res, next) => {
   }
 };
 
-// manager-admin
 exports.addProduct = async (req, res, next) => {
   try {
     const {
@@ -69,14 +66,13 @@ exports.addProduct = async (req, res, next) => {
 
     res.status(201).json({
       status: "success",
-      message: `Prodcut:${name} is added`,
+      message: `Product:${name} is added`,
     });
   } catch (err) {
     next(err);
   }
 };
 
-// manaver ve admin
 exports.deleteProduct = async (req, res, next) => {
   try {
     // const productId = `${req.params.id[]}`

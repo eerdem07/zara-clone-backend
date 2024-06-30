@@ -8,7 +8,9 @@ const saltrounds = 15;
 
 const AppError = require("../utils/AppError");
 
-const createJWT = ({ id, role }) => {
+const crypto = require("crypto");
+
+const createJWT = (id, role) => {
   return jsonwebtoken.sign({ _id: id, role: role }, process.env.SECRET_KEY, {
     expiresIn: "10m",
   });
@@ -18,7 +20,7 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select("password");
+    const user = await User.findOne({ email }).select("password role");
 
     if (!user) throw new AppError("please fullfil email or password", 400);
 
@@ -127,7 +129,16 @@ exports.forgotPassword = async (req, res, next) => {
 
     if (!user) throw new AppError("user can not be found", 400);
 
-    // sendMail(email, "resetPassword", otp, `<h1>Here is your ${otp} code</h1>`);
+    const token = crypto.randomBytes(20).toString("hex");
+
+    const url = `http://wwww.${process.env.HOST}:${process.env.PORT}/resetPassword/${token}`;
+
+    sendMail(user.email, "resetPassword", "Here is your URL", url);
+
+    user.passwordResetToken = token;
+    user.passwordResetTokenExpires = Date.now() + 3600000;
+
+    await user.save();
 
     res.status(200).json({
       status: "success",
@@ -141,21 +152,52 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   try {
     const { newPassword } = req.body;
+    const { token } = req.params.token;
+
+    if (!token || !newPassword) {
+      throw new AppError("", 400);
+    }
+
+    const user = await User.findOne({
+      passwordResetToken: token,
+      passwordResetTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) throw new AppError("User cant be found!", 400);
+
+    const hashedPassword = await bcrypt.hash(password, saltrounds);
+
+    user.password = hashedPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+
+    await user.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "password succesfully changed!",
+    });
   } catch (err) {
     next(err);
   }
 };
 
-exports.authenticate = async (req, res, next) => {
-  try {
-    jwt.verify(
-      req.cookies.jwt,
-      process.env.SECRET_KEY,
-      function (err, decoded) {
-        throw new AppError(err, 400);
+exports.authorize = (roles) => {
+  return async (req, res, next) => {
+    try {
+      const token = req.cookies.jwt;
+      const decoded = jsonwebtoken.verify(token, process.env.SECRET_KEY);
+
+      if (!roles.includes(decoded.role)) {
+        throw new AppError(
+          "You dont have permission to access to this route",
+          400
+        );
       }
-    );
-  } catch (err) {
-    next(err);
-  }
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
 };

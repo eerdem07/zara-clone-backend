@@ -13,6 +13,8 @@ const errorController = require("./controllers/errorController");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
+const authController = require("./controllers/authController");
+
 app.use(
   rateLimit({
     windowMs: 15 * 10 * 1000,
@@ -21,13 +23,15 @@ app.use(
 );
 
 app.use(cookieParser());
-
 app.use(helmet());
-
 app.use(express.json());
 app.use(morgan("dev"));
 
 // ROUTES
+app.use("/", (req, res, next) => {
+  next();
+});
+
 app.use("/api/v1/", userRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/category", categoryRoutes);

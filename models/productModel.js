@@ -67,6 +67,7 @@ const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
 
+// SchemaTypes: String, Number, Date, Boolean, Array,
 // SchemaTypes: required, default, select, validate, get, set, alias, immutabe, transform
 // indexes: index, unique, sprase
 // String: lowercase, uppercase, trim, match, enum, minLength, maxLength, populate
