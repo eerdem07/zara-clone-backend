@@ -37,8 +37,8 @@ exports.login = async (req, res, next) => {
         })
         .status(200)
         .json({
-          status: "succcess",
-          message: "succesfully logged in!",
+          status: "success",
+          message: "successfully logged in!",
         });
     } else {
       res
@@ -84,7 +84,7 @@ exports.logout = async (req, res, next) => {
   res.cookie("token", "", { expiresIn: new Date(0) });
   res
     .status(200)
-    .json({ status: "success", message: "successfully logged out!" });
+    .json({ status: "success", message: "Successfully logged out!" });
 };
 
 exports.changePassword = async (req, res, next) => {
@@ -92,13 +92,13 @@ exports.changePassword = async (req, res, next) => {
     const { email, password, newPassword } = req.body;
 
     if (!email || !password || !newPassword)
-      throw new AppError("no parameters sent", 400);
+      throw new AppError("No parameters sent", 400);
 
     const user = await User.findOne({ email }).select("password");
 
     if (!user)
       throw new AppError(
-        "the user with this given email cant not be found!",
+        "The user with this given email cant not be found!",
         400
       );
 
@@ -141,8 +141,8 @@ exports.forgotPassword = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({
-      status: "success",
-      message: "mail sended",
+      status: "Success",
+      message: "Mail sent",
     });
   } catch (err) {
     next(err);
@@ -155,7 +155,7 @@ exports.resetPassword = async (req, res, next) => {
     const { token } = req.params.token;
 
     if (!token || !newPassword) {
-      throw new AppError("", 400);
+      throw new AppError("Email or Token isnt provided!", 400);
     }
 
     const user = await User.findOne({
@@ -174,8 +174,8 @@ exports.resetPassword = async (req, res, next) => {
     await user.save();
 
     res.status(201).json({
-      status: "success",
-      message: "password succesfully changed!",
+      status: "Success",
+      message: "Password succesfully changed!",
     });
   } catch (err) {
     next(err);
