@@ -16,19 +16,12 @@ router
     productController.updateProduct
   );
 
-// getAllProduct -> herkes
-// addProduct -> Manager, admin
-// updateProduct -> Manager, admin
-
 router
-  .route("/:id")
+  .route("/:productId")
   .get(productController.getProduct)
   .delete(
     authController.authorize(["employee", "admin"]),
     productController.deleteProduct
   );
-
-// getProduct -> herkes
-// deleteProduct -> admin, deleteProduct
 
 module.exports = router;

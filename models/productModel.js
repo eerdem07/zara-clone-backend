@@ -14,7 +14,6 @@ const productSchema = new mongoose.Schema(
     ],
     discount: { type: Number, required: false, min: 1, max: 99, default: 0 },
     returnPolicy: { type: Boolean, required: true, default: false },
-
     variants: [
       {
         color: { type: String, required: true },

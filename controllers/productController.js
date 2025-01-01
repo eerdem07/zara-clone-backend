@@ -17,7 +17,7 @@ exports.getAllProduct = async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   try {
-    const { productId } = req.body;
+    const { productId } = req.params;
 
     if (!productId) throw new AppError("Please provide the productId", 400);
 
@@ -28,7 +28,7 @@ exports.getProduct = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "Product founded",
+      message: `Product: ${product.name} founded!`,
       data: product,
     });
   } catch (err) {
@@ -66,7 +66,7 @@ exports.addProduct = async (req, res, next) => {
 
     res.status(201).json({
       status: "success",
-      message: `Product:${name} is added`,
+      message: `Product: ${name} is added`,
     });
   } catch (err) {
     next(err);
@@ -75,13 +75,11 @@ exports.addProduct = async (req, res, next) => {
 
 exports.deleteProduct = async (req, res, next) => {
   try {
-    // const productId = `${req.params.id[]}`
-
-    const { productId } = req.body;
+    const { productId } = req.params;
 
     if (!productId) throw new AppError("Please provide the productId", 400);
 
-    const product = await Product.findOne({ productId });
+    const product = await Product.findOne({ productId }).select("name");
 
     if (!product)
       throw new AppError("Product cant be found with this productId", 400);
@@ -90,13 +88,13 @@ exports.deleteProduct = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "Product succesfully deleted",
+      message: `Product: ${product.name} succesfully deleted!`,
     });
   } catch (err) {
     next(err);
   }
 };
 
-// ürün silmenin haricinde deactive product isimli bir fonksiyon da olacak
+exports.deActiveProduct = async (req, res, next) => {};
 
 exports.updateProduct = async (req, res, next) => {};

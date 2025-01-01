@@ -3,14 +3,12 @@ const Product = require("../models/productModel");
 
 const AppError = require("../utils/AppError");
 
-// herkes
 exports.getCategoryWithProducts = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
   } catch (err) {}
 };
 
-// manager - admin
 exports.addCategory = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
@@ -33,7 +31,6 @@ exports.addCategory = async (req, res, next) => {
   }
 };
 
-// manager-admin
 exports.deleteCategory = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
@@ -53,7 +50,6 @@ exports.deleteCategory = async (req, res, next) => {
   }
 };
 
-// manager ve admin
 exports.changeCategoryName = async (req, res, next) => {
   try {
     const { categoryName, newCategoryName } = req.body;
@@ -76,15 +72,15 @@ exports.changeCategoryName = async (req, res, next) => {
   }
 };
 
-// manager ve admin
 exports.addProductToCategory = async (req, res, next) => {
   try {
-    const { productId, categoryName } = req.body;
+    const { categoryId, productId } = req.params;
 
     if (!productId || !categoryName)
-      throw new AppError("please fullfil productId or categoryName", 400);
+      throw new AppError("please fullfil productId or categoryId", 400);
 
-    const category = await Category.findone({ categoryName });
+    const category = await Category.findone({ categoryId });
+    const product = await Product.findOne({ productId }).select("name");
 
     if (!category) throw new AppError("category cannot be found!", 400);
 
@@ -94,20 +90,19 @@ exports.addProductToCategory = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: `${productId} is added to ${categoryName}`,
+      message: `${product.name} is added to ${categoryName}`,
     });
   } catch (err) {
     next(err);
   }
 };
 
-// manager ve admin
 exports.deleteProductFromCategory = async (req, res, next) => {
   try {
-    const { productId, categoryName } = req.body;
+    const { categoryId, productId } = req.params;
 
     if (!productId || !categoryName)
-      throw new AppError("Please fullfil the productId or categoryName", 400);
+      throw new AppError("Please fullfil the productId or categoryId", 400);
 
     const category = await Category.findOne({ categoryName });
 
